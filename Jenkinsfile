@@ -38,9 +38,9 @@ tools {
       stage('4. Docker image build') {
          steps{
           sh "aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 590183905657.dkr.ecr.us-west-2.amazonaws.com"
-          sh "sudo docker build -t addressbook ."
-          sh "sudo docker tag addressbook:latest ${params.aws_account}.dkr.ecr.us-west-2.amazonaws.com/addressbook:${params.ecr_tag}"
-          sh "sudo docker push ${params.aws_account}.dkr.ecr.us-west-2.amazonaws.com/addressbook:${params.ecr_tag}"
+          sh "echo "590183905657.dkr.ecr.us-west-2.amazonaws.com" | sudo -S docker build -t addressbook ."
+          sh "echo "590183905657.dkr.ecr.us-west-2.amazonaws.com" | sudo -S docker tag addressbook:latest ${params.aws_account}.dkr.ecr.us-west-2.amazonaws.com/addressbook:${params.ecr_tag}"
+          sh "echo "590183905657.dkr.ecr.us-west-2.amazonaws.com" | sudo -S docker push ${params.aws_account}.dkr.ecr.us-west-2.amazonaws.com/addressbook:${params.ecr_tag}"
          }
        }
       stage('5. Deployment into kubernetes cluster') {
