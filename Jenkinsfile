@@ -23,7 +23,7 @@ tools {
       steps {
        script {
          def scannerHome = tool 'SonarQube_Scanner-5.0.1';
-         withSonarQubeEnv("sonar-integration") {
+         withSonarQubeEnv("Team-A-Address-book-Deployment") {
          sh "${tool("SonarQube_Scanner-5.0.1")}/bin/sonar-scanner -X \
          -Dsonar.projectKey=Team-A-Address-book-Deployment \
          -Dsonar.projectName='Team-A-Address book-Deployment' \
