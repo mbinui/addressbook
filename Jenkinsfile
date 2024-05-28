@@ -25,12 +25,10 @@ tools {
          def scannerHome = tool 'SonarQube_Scanner-5.0.1';
          withSonarQubeEnv("sonar-integration") {
          sh "${tool("SonarQube_Scanner-5.0.1")}/bin/sonar-scanner -X \
-           -Dsonar.projectKey=adressbook-app \
-           -Dsonar.projectName='adressbook-app' \
-           -Dsonar.host.url=https://sonar.shiawslab.com \
-           -Dsonar.token=$SONAR_TOKEN \
-           -Dsonar.sources=src/main/java/ \
-           -Dsonar.java.binaries=target/classes"
+         -Dsonar.projectKey=Team-A-Address-book-Deployment \
+         -Dsonar.projectName='Team-A-Address book-Deployment' \
+         -Dsonar.host.url=http://54.149.225.61:9000 \
+         -Dsonar.token=sqp_89e0ad650973086c300e54c490bfaa3923acf820
           }
          }
        }
