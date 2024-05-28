@@ -19,7 +19,7 @@ tools {
          }
        }
       stage('3. SonarQube analysis') {
-      environment {SONAR_TOKEN = credentials('sonar-token-abook')}
+      environment {SONAR_TOKEN = credentials('Team-A-Address-book-Deployment')}
       steps {
        script {
          def scannerHome = tool 'SonarQube_Scanner-5.0.1';
@@ -27,7 +27,7 @@ tools {
          sh "${tool("SonarQube_Scanner-5.0.1")}/bin/sonar-scanner -X \
          -Dsonar.projectKey=Team-A-Address-book-Deployment \
          -Dsonar.projectName='Team-A-Address book-Deployment' \
-         -Dsonar.host.url=http://54.149.225.61:9000 \
+         -Dsonar.host.url=http://172.31.39.4:9000 \
          -Dsonar.token=sqp_89e0ad650973086c300e54c490bfaa3923acf820
           }
          }
