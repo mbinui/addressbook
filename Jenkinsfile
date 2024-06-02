@@ -43,15 +43,24 @@ tools {
           sh "echo '590183905657.dkr.ecr.us-west-2.amazonaws.com' | sudo -S docker push ${params.aws_account}.dkr.ecr.us-west-2.amazonaws.com/addressbook:${params.ecr_tag}"
          }
        }
-      stage('5. Deployment into kubernetes cluster') {
+      stage('5. Application deployment in eks') {
         steps{
           kubeconfig(caCertificate: '',credentialsId: 'k8s-kubeconfig', serverUrl: '') {
           sh "kubectl apply -f manifest"
           }
          }
        }
-
-      stage ('6. Email Notification') {
+      stage('6. Monitoring solution deployment in eks') {
+        steps{
+          kubeconfig(caCertificate: '',credentialsId: 'k8s-kubeconfig', serverUrl: '') {
+          sh "kubectl apply -f monitoring"
+          sh "chmod +x -R script"
+          sh(""" script/createIRSA-AMPIngest.sh""")
+          sh(""" script/createIRSA-AMPQuery.sh""")
+          }
+         }
+       }
+      stage ('7. Email Notification') {
          steps{
          mail bcc: 'mbinuintangku@gmail.com', body: '''Build is Over. Check the application using the URL below. 
          https//abook.shiawslab.com/addressbook-1.0
