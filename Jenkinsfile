@@ -1,7 +1,7 @@
 pipeline {
  agent { node { label "maven-sonarqube-deploy-node" } }
  parameters   {
-   choice(name: 'aws_account',choices: ['322266404742', '4568366404742', '922266408974'], description: 'aws account hosting image registry')
+   choice(name: 'aws_account',choices: ['590183905657'], description: 'aws account hosting image registry')
    choice(name: 'ecr_tag',choices: ['1.1.0','1.2.0','1.3.0'], description: 'Choose the ecr tag version for the build')
        }
 tools {
@@ -10,7 +10,7 @@ tools {
     stages {
       stage('1. Git Checkout') {
         steps {
-          git branch: 'main', credentialsId: 'github-repo-pat', url: 'https://github.com/ndiforfusi/addressbook.git'
+          git branch: 'main', credentialsId: 'PAT', url: 'https://github.com/Dominionsys-Inc/addressbook.git'
         }
       }
       stage('2. Build with maven') { 
@@ -19,28 +19,28 @@ tools {
          }
        }
       stage('3. SonarQube analysis') {
-      environment {SONAR_TOKEN = credentials('sonar-token-abook')}
+      environment {SONAR_TOKEN = credentials('Team-A-Address-book-Deployment')}
       steps {
        script {
          def scannerHome = tool 'SonarQube_Scanner-5.0.1';
-         withSonarQubeEnv("sonar-integration") {
+         withSonarQubeEnv("Team-A-Address-book-Deployment") {
          sh "${tool("SonarQube_Scanner-5.0.1")}/bin/sonar-scanner -X \
-           -Dsonar.projectKey=adressbook-app \
-           -Dsonar.projectName='adressbook-app' \
-           -Dsonar.host.url=https://sonar.shiawslab.com \
+           -Dsonar.projectKey=Team-A-Address-book-Deployment \
+           -Dsonar.projectName='Team-A-Address book-Deployment' \
+           -Dsonar.host.url=http://172.31.39.4:9000 \
            -Dsonar.token=$SONAR_TOKEN \
            -Dsonar.sources=src/main/java/ \
-           -Dsonar.java.binaries=target/classes"
+           -Dsonar.java.binaries=target/classes" 
           }
          }
        }
       }
       stage('4. Docker image build') {
          steps{
-          sh "aws ecr get-login-password --region us-west-2 | sudo docker login --username AWS --password-stdin ${params.aws_account}.dkr.ecr.us-west-2.amazonaws.com"
-          sh "sudo docker build -t addressbook ."
-          sh "sudo docker tag addressbook:latest ${params.aws_account}.dkr.ecr.us-west-2.amazonaws.com/addressbook:${params.ecr_tag}"
-          sh "sudo docker push ${params.aws_account}.dkr.ecr.us-west-2.amazonaws.com/addressbook:${params.ecr_tag}"
+          sh "aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 590183905657.dkr.ecr.us-west-2.amazonaws.com"
+          sh "echo '590183905657.dkr.ecr.us-west-2.amazonaws.com' | sudo -S docker build -t addressbook ."
+          sh "echo '590183905657.dkr.ecr.us-west-2.amazonaws.com' | sudo -S docker tag addressbook:latest ${params.aws_account}.dkr.ecr.us-west-2.amazonaws.com/addressbook:${params.ecr_tag}"
+          sh "echo '590183905657.dkr.ecr.us-west-2.amazonaws.com' | sudo -S docker push ${params.aws_account}.dkr.ecr.us-west-2.amazonaws.com/addressbook:${params.ecr_tag}"
          }
        }
       stage('5. Deployment into kubernetes cluster') {
@@ -53,12 +53,12 @@ tools {
 
       stage ('6. Email Notification') {
          steps{
-         mail bcc: 'fusisoft@gmail.com', body: '''Build is Over. Check the application using the URL below. 
+         mail bcc: 'mbinuintangku@gmail.com', body: '''Build is Over. Check the application using the URL below. 
          https//abook.shiawslab.com/addressbook-1.0
          Let me know if the changes look okay.
          Thanks,
          Dominion System Technologies,
-         +1 (313) 413-1477''', cc: 'fusisoft@gmail.com', from: '', replyTo: '', subject: 'Application was Successfully Deployed!!', to: 'fusisoft@gmail.com'
+         +1 (313) 413-1477''', cc: 'mbinuintangku@gmail.com', from: '', replyTo: '', subject: 'Application was Successfully Deployed!!', to: 'mbinuintangku@gmail.com'
       }
     }
  }
